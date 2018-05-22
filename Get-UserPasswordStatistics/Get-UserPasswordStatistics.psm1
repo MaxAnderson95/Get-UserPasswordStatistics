@@ -1,5 +1,5 @@
 Function Get-UserPasswordStatistics {
-
+    
     [CmdletBinding()]
     Param (
 
@@ -27,7 +27,9 @@ Function Get-UserPasswordStatistics {
             "PasswordExpired" = $User.PasswordExpired
             "PasswordNeverExpires" = $User.PasswordNeverExpires
             "PasswordAge" = $(
-                If ($User.PasswordLastSet -ne $Null) {((Get-Date) - $User.PasswordLastSet).Days}
+                If ($User.PasswordLastSet -ne $Null) { 
+                    Write-Output "$(((Get-Date) - $User.PasswordLastSet).Days) days"
+                }
             )
             "PasswordLastSet" = $User.PasswordLastSet
             "PasswordChangeOnNextLogon" = $(
