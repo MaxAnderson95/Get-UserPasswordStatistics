@@ -10,13 +10,34 @@ Function Get-UserPasswordStatistics {
 
     Begin {
 
+        #Explicity import module for <PS 3.0
+        Import-Module ActiveDirectory
+
     }
 
     Process {
 
-        $User = Get-ADUser -Identity $User
+        $User = Get-ADUser -Identity $Identity -Properties "msDS-UserPasswordExpiryTimeComputed", "PasswordExpired", "PasswordNeverExpires", "PasswordLastSet"
+        
+        $Obj = [PSCustomObject] @{
 
-        Write-Output $User
+            "Name" = $User.Name
+            "SAMAccountName" = $User.SAMAccountName
+            "Enabled" = $User.Enabled
+            "PasswordExpired" = $User.PasswordExpired
+            "PasswordNeverExpires" = $User.PasswordNeverExpires
+            "PasswordAge" = $(
+                If ($User.PasswordLastSet -ne $Null) {((Get-Date) - $User.PasswordLastSet).Days}
+            )
+            "PasswordLastSet" = $User.PasswordLastSet
+            "PasswordChangeOnNextLogon" = $(
+                If ($User.PasswordLastSet -eq $Null) {$True}
+                Else {$False} 
+            )
+
+        }
+
+        Write-Output $Obj
 
     }
 
