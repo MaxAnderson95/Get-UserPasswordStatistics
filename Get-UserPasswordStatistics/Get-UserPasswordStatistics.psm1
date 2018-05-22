@@ -4,7 +4,7 @@ Function Get-UserPasswordStatistics {
     Param (
 
         [Parameter(Mandatory=$True,ValueFromPipeline=$True,ValueFromPipelineByPropertyName=$True)]
-        $Identity
+        [String]$Identity
 
     )
 
@@ -13,6 +13,10 @@ Function Get-UserPasswordStatistics {
     }
 
     Process {
+
+        $User = Get-ADUser -Identity $User
+
+        Write-Output $User
 
     }
 
