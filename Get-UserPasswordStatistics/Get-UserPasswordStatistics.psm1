@@ -56,32 +56,18 @@ Function Get-UserPasswordStatistics {
     
     Begin {
             
-        #Explicity import module for <PS 3.0
-        Import-Module ActiveDirectory -ErrorVariable Error_Import
+        #Check to see if the ActiveDirectory module is installed
+        $ADModule = Get-Module -ListAvailable ActiveDirectory
+        
+        If ($ADModule -eq $Null) {
 
-        #Check for errors. Try Catch not used because Import-Module does not generate a terminating error.
-        Switch ($Error_Import.Exception.GetType().FullName) {
-
-            "System.IO.FileNotFoundException" {
-
-                Write-Error "Active Directory module not found!"
-
-            }
-
-            Default {
-
-                Write-Error "An unknown error occured."
-                
-            }
-
-        }
-
-        #If any errors occured, break
-        If ($Error_Import -ne $Null) {
-
+            Write-Error "Active Directory module not found! Install the ADDS RSAT Tools"
             Break
 
         }
+
+        #Explicitly import the module for pre PS 4.0
+        Import-Module ActiveDirectory
 
     }
 
